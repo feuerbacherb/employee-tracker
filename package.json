@@ -1,0 +1,24 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "A console application created to allow a manager to track employees",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feuerbacherb/employee-tracker.git"
+  },
+  "author": "Brent Feuerbacher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/feuerbacherb/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/feuerbacherb/employee-tracker#readme",
+  "dependencies": {
+    "console-table": "^0.1.2",
+    "inquirer": "^7.1.0",
+    "mysql2": "^2.1.0"
+  }
+}
