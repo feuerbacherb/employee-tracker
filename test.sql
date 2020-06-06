@@ -80,7 +80,8 @@ SELECT
    d.name as department,
    SUM(r.salary) total_salary
 FROM 
-   role r
+   employee e
+   INNER JOIN role r ON e.role_id = r.id
    INNER JOIN department d ON r.department_id = d.id
 GROUP BY
    d.name

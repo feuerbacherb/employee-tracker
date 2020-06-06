@@ -8,6 +8,7 @@ const {
 const {
    getAllDepartments,
    getDepartmentNames,
+   getDepartmentBudget,
    addDepartment
  } = require('./db/departmentHandler');
 const {
@@ -101,6 +102,7 @@ async function mainPrompt() {
             "View All Employees",
             "View Employees By Manager",
             "View Employees By Department",
+            "View Department Budget",
             "Add Department",
             "Add Role",
             "Add Employee",
@@ -137,6 +139,10 @@ async function init() {
             const deptName = await promptViewEmployeesByDept();
             await getEmployeesByDept(deptName);
             break
+         }
+         case 'View Department Budget': {
+            await getDepartmentBudget();
+            break;
          }
          case 'Add Department': {
             const deptName = await promptAddDepartment();

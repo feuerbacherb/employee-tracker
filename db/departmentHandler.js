@@ -51,6 +51,30 @@ async function getDepartmentId(name) {
    return deptId;
 }
 
+// GET department budget
+async function getDepartmentBudget() {
+   const sql = `
+      SELECT
+         d.name as department,
+         SUM(r.salary) total_salary
+      FROM 
+         employee e
+         INNER JOIN role r ON e.role_id = r.id
+         INNER JOIN department d ON r.department_id = d.id
+      GROUP BY
+         d.name
+      ORDER BY
+         d.name
+   `;
+
+   const rows = await db.query(sql);
+   const depts = [];
+   for (const row of rows) {
+      depts.push(row);
+   }
+   console.table(depts);
+}
+
 // function to add department
 async function addDepartment(obj) {
    // extract the new department from the object
@@ -68,5 +92,6 @@ module.exports = {
    getAllDepartments,
    getDepartmentNames,
    getDepartmentId,
+   getDepartmentBudget,
    addDepartment
 };
