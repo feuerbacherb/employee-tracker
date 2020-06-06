@@ -39,5 +39,50 @@
 
 
 -- ADD a role
-INSERT INTO role (title, salary, department_id)
-VALUES ('Program Manager', '45000', 2);
+-- INSERT INTO role (title, salary, department_id)
+-- VALUES ('Program Manager', '45000', 2);
+
+
+-- GET all managers
+   -- SELECT CONCAT(e.last_name, ', ', e.first_name) AS manager, e.id
+   -- FROM employee e
+   -- WHERE e.manager_id IS NULL
+   -- ORDER BY e.last_name;
+
+
+-- GET all employees by manager
+-- SELECT
+--    CONCAT(e.last_name, ', ', e.first_name) AS employee,
+--    r.title AS title
+-- FROM 
+--    employee e
+--    INNER JOIN role r ON e.role_id = r.id
+-- WHERE
+--    e.manager_id = 12;
+
+
+-- GET all employees by department
+-- SELECT
+--    CONCAT(e.last_name, ', ', e.first_name) AS employee,
+--    r.title,
+--    r.salary
+-- FROM
+--    employee e
+--    INNER JOIN role r ON e.role_id = r.id
+--    INNER JOIN department d ON r.department_id = d.id
+-- WHERE
+--    d.id = 2
+-- ORDER BY e.last_name;
+
+
+-- GET budget per department
+SELECT
+   d.name as department,
+   SUM(r.salary) total_salary
+FROM 
+   role r
+   INNER JOIN department d ON r.department_id = d.id
+GROUP BY
+   d.name
+ORDER BY
+   d.name;

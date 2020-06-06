@@ -37,7 +37,7 @@ async function getDepartmentNames() {
 }
 
 // function to get department id
-async function getDepartmentId(id) {
+async function getDepartmentId(name) {
    const sql = `
       SELECT
          id
@@ -45,7 +45,7 @@ async function getDepartmentId(id) {
          department
       WHERE name = ?
    `;
-   const params = [id];
+   const params = [name];
 
    const deptId = await db.query(sql, params);
    return deptId;
