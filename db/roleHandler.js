@@ -2,7 +2,7 @@
 const db = require('./dbConnection');
 const {
    getDepartmentId
-} = require('./deparmentHandler');
+} = require('./departmentHandler');
 
 // GET all roles
 async function getAllRoles() {
@@ -25,9 +25,20 @@ async function getAllRoles() {
    console.table(roles);
 }
 
+// Add new role to the database
 async function addRole(obj) {
-   const deptId = 
-   console.log(obj);
+   // take the information from the prompts and apply it
+   // need to grab the deptId first
+   const department = await getDepartmentId(obj.roleDepartment);
+   
+   // set up insert statement based on the supplied information
+   const sql = `
+      INSERT INTO role (title, salary, department_id)
+      VALUES (?,?,?)
+   `;
+   const params = [obj.roleName, obj.roleSalary, department[0].id];
+   const row = await db.query(sql, params);
+   console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `${obj.roleName} has been added to the role table.\nChoose View All Roles to see the new role.`);
 }
 
 module.exports = {

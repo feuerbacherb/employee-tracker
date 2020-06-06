@@ -61,7 +61,7 @@ async function addDepartment(obj) {
    `;
    const params = [name];
    const rows = await db.query(sql, params);
-   console.log(`Successfully added ${name} into department`);
+   console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `Successfully added ${name} into department`);
 }
 
 module.exports = {

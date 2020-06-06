@@ -62,6 +62,7 @@ async function mainPrompt() {
             "View All Employees",
             "Add Department",
             "Add Role",
+            "Add Employee",
             "Exit"
          ]
       }
