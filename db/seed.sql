@@ -33,4 +33,4 @@ VALUES
    ('Keren', 'Kastner', 6, 5),
 
    ('Uttara', 'Nilsson', 7, null),
-   ('Emelrich', 'Haugen', 8, 7);
+   ('Emelrich', 'Haugen', 8, 12);
