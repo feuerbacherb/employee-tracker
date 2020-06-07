@@ -134,7 +134,7 @@ async function getEmployeesByDept(name) {
       ORDER BY e.last_name
    `;
    const params = [id];
-   const rows = await db.query(sql, params);console.log(rows);
+   const rows = await db.query(sql, params);
    const employees = [];
    for (const row of rows) {
       employees.push(row);
