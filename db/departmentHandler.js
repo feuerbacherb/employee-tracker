@@ -48,7 +48,11 @@ async function getDepartmentId(name) {
    const params = [name];
 
    const deptId = await db.query(sql, params);
-   return deptId;
+   const id = [];
+   for (const row of deptId) {
+      id.push(row);
+   }
+   return id[0].id;
 }
 
 // GET department budget

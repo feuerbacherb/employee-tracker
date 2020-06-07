@@ -1,9 +1,14 @@
 // required connects
 const {
    getAllEmployees,
+   getEmployeeNames,
    getAllManagers,
+   getManagerIdByName,
+   getEmployeeIdByName,
    getEmployeesByManagerName,
-   getEmployeesByDept
+   getEmployeesByDept,
+   updateEmployeeRole,
+   updateEmployeeManager
 } = require('./db/employeeHandler');
 const {
    getAllDepartments,
@@ -13,6 +18,8 @@ const {
  } = require('./db/departmentHandler');
 const {
    getAllRoles,
+   getRoleNames,
+   getRoleIdByName,
    addRole
 } = require('./db/roleHandler');
 const inquirer = require('inquirer');
@@ -88,6 +95,36 @@ async function promptAddRole() {
    ])
 }
 
+// UPDATE EMPLOYEE
+async function promptUpdateEmployee() {
+   const employees = await getEmployeeNames();
+   return inquirer.prompt([
+      {
+         type: 'list',
+         message: 'Choose an employee to update:',
+         name: 'emp',
+         choices: [
+            ...employees
+         ]
+      }
+   ])
+}
+
+// GET ROLE NAME
+async function promptGetNewRole() {
+   const roles = await getRoleNames();
+   return inquirer.prompt([
+      {
+         type: 'list',
+         message: 'Choose the employee\'s new role',
+         name: 'role',
+         choices: [
+            ...roles
+         ]
+      }
+   ])
+}
+
 
 // this is the first prompt the users encounter and acts like the main menu
 async function mainPrompt() {
@@ -106,6 +143,8 @@ async function mainPrompt() {
             "Add Department",
             "Add Role",
             "Add Employee",
+            "Update Employee Role",
+            "Update Employee Manager",
             "Exit"
          ]
       }
@@ -132,7 +171,8 @@ async function init() {
          }
          case 'View Employees By Manager': {
             const manager = await promptViewEmployeesByManager();
-            await getEmployeesByManagerName(manager);
+            console.log(manager);
+            await getEmployeesByManagerName(manager.manager);
             break;
          }
          case 'View Employees By Department': {
@@ -154,6 +194,22 @@ async function init() {
             await addRole(newRole);
             break;
          }
+         case 'Update Employee Role': {
+            const empName = await promptUpdateEmployee();//console.log(empName.emp);
+            const empId = await getEmployeeIdByName(empName.emp);
+            const newRole = await promptGetNewRole(); console.log(newRole);
+            const newRoleId = await getRoleIdByName(newRole.role);
+            await updateEmployeeRole(empName.emp, empId, newRole.role, newRoleId);
+            break;
+         }
+         case 'Update Employee Manager': {
+            const empName = await promptUpdateEmployee();
+            const empId = await getEmployeeIdByName(empName.emp);
+            const manager = await promptViewEmployeesByManager();
+            const managerId = await getManagerIdByName(manager);
+            await updateEmployeeManager(empName.emp, empId, manager.manager, managerId);
+            break;
+         }         
          case 'Exit': {
             exitLoop = true;
             process.exit(0);

@@ -25,6 +25,34 @@ async function getAllRoles() {
    console.table(roles);
 }
 
+// GET role titles
+async function getRoleNames() {
+   const sql = `
+      SELECT title
+      FROM role
+   `;
+   const rows = await db.query(sql);
+   const roles = [];
+   for (const row of rows) {
+      roles.push(row.title);
+   }
+   return roles;
+}
+
+// GET role id by name
+async function getRoleIdByName(title) {
+   const sql = `
+      SELECT id
+      FROM role
+      WHERE title = ?
+   `;
+   const params = [title];
+   console.log(title);
+   const rows = await db.query(sql, params);
+   const id = rows[0].id;
+   return id;
+}
+
 // Add new role to the database
 async function addRole(obj) {
    // take the information from the prompts and apply it
@@ -43,5 +71,7 @@ async function addRole(obj) {
 
 module.exports = {
    getAllRoles,
+   getRoleNames,
+   getRoleIdByName,
    addRole
 };

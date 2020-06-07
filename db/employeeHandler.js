@@ -32,6 +32,22 @@ async function getAllEmployees() {
    console.table(employees);
 }
 
+// GET employee name
+async function getEmployeeNames() {
+   const sql = `
+      SELECT
+         CONCAT(last_name, ', ', first_name) AS employee
+      FROM employee
+      ORDER BY last_name
+   `;
+   const rows = await db.query(sql);
+   const employees = [];
+   for (const row of rows) {
+       employees.push(row.employee);
+   }
+   return employees;
+}
+
 // GET managers
 async function getAllManagers() {
    const sql = `
@@ -48,22 +64,38 @@ async function getAllManagers() {
    return managers;
 }
 
-// GET employee id by name
-async function getEmployeeIdByName(name) {
+// GET manager id by name
+async function getManagerIdByName(name) {
    //console.log(name.manager);
    const sql = `
       SELECT id
       FROM employee
       WHERE CONCAT(last_name, ', ', first_name) = ?
    `;
+
    const params = [name.manager];
    const row = await db.query(sql, params);
    return row[0].id;
 }
 
-// GET employees by manager_id
+// GET employee id by name
+async function getEmployeeIdByName(name) {
+   //console.log(name);
+   const sql = `
+      SELECT id
+      FROM employee
+      WHERE CONCAT(last_name, ', ', first_name) = ?
+   `;
+
+   const params = [name];
+   const row = await db.query(sql, params);
+   return row[0].id;
+}
+
+// GET employees by manager_name
 async function getEmployeesByManagerName(name) {
    const id = await getEmployeeIdByName(name);
+   console.log(name);
    const sql = `
       SELECT
          CONCAT(last_name, ', ', first_name) AS employee,
@@ -79,7 +111,7 @@ async function getEmployeesByManagerName(name) {
       employees.push(row);
    }
    if (employees.length === 0) {
-      console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `There are no employees under ${name.manager}.`);
+      console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `There are no employees under ${name}.`);
       return;
    }
    console.table(employees);
@@ -87,7 +119,7 @@ async function getEmployeesByManagerName(name) {
 
 // GET employees by dept
 async function getEmployeesByDept(name) {
-   const id = await getDepartmentId(name.dept);
+   const id = await getDepartmentId(name.dept);console.log(id);
    const sql = `
       SELECT
          CONCAT(e.last_name, ', ', e.first_name) AS employee,
@@ -98,11 +130,11 @@ async function getEmployeesByDept(name) {
          INNER JOIN role r ON e.role_id = r.id
          INNER JOIN department d ON r.department_id = d.id
       WHERE
-         d.id = 2
+         d.id = ?
       ORDER BY e.last_name
    `;
    const params = [id];
-   const rows = await db.query(sql, params);
+   const rows = await db.query(sql, params);console.log(rows);
    const employees = [];
    for (const row of rows) {
       employees.push(row);
@@ -114,9 +146,38 @@ async function getEmployeesByDept(name) {
    console.table(employees);
 }
 
+// UPDATE the employee's title to a new one
+async function updateEmployeeRole(empName, empId, newRole, newRoleId) {
+   const sql = `
+      UPDATE employee
+      SET role_id = ?
+      WHERE id = ?
+   `;
+   const params = [newRoleId, empId];
+   const row = await db.query(sql, params);
+   console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `Successfully transferred ${empName} to ${newRole}.`);
+}
+
+// UPDATE the employee's manager to a new one
+async function updateEmployeeManager(emp, empId, manager, managerId) {
+   const sql = `
+      UPDATE employee
+      SET manager_id = ?
+      WHERE id = ?
+   `;
+   const params = [managerId, empId];
+   const row = await db.query(sql, params);
+   console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `Successfully transferred ${emp} to ${manager}.`)
+}
+
 module.exports = {
    getAllEmployees,
+   getEmployeeNames,
    getAllManagers,
+   getManagerIdByName,
+   getEmployeeIdByName,
    getEmployeesByManagerName,
-   getEmployeesByDept
+   getEmployeesByDept,
+   updateEmployeeRole,
+   updateEmployeeManager
 };
