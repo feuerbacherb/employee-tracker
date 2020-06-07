@@ -27,6 +27,7 @@ This tool is used to track employees, their managers, their roles, and their dep
 The user can utilize this program to keep track of the hierarchy of their company, including managing titles, departments and employees.  They have the ability to add to each of these, as well as make modification to the roles and managers of the employees.  Finally, the user has a multitude of reporting capabilities available to them in order to monitor these changes.
 
 How to Use Video: https://drive.google.com/file/d/1lv0omgBzEl0FCjq42FOgN7_3W0Hd7lem/view
+![](https://github.com/feuerbacherb/employee-tracker/blob/master/assets/images/Employee-Tracker.gif?raw=true)
 
 ### Challenges
 Deleting departments, roles, and employees was posing a big issues.  It isn't simply just removing the record from the table, but entails moving all the dependencies to a different record.  Since this would make the assignment late, this portion of the application was omitted... also because it was bonus points.
