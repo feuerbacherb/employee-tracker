@@ -30,6 +30,7 @@ async function getRoleNames() {
    const sql = `
       SELECT title
       FROM role
+      ORDER BY title
    `;
    const rows = await db.query(sql);
    const roles = [];
@@ -47,9 +48,12 @@ async function getRoleIdByName(title) {
       WHERE title = ?
    `;
    const params = [title];
-   console.log(title);
    const rows = await db.query(sql, params);
-   const id = rows[0].id;
+   const titles = [];
+   for (const row of rows) {
+      titles.push(row);
+   }
+   const id = titles[0].id;
    return id;
 }
 
@@ -57,14 +61,14 @@ async function getRoleIdByName(title) {
 async function addRole(obj) {
    // take the information from the prompts and apply it
    // need to grab the deptId first
-   const department = await getDepartmentId(obj.roleDepartment);
+   const id = await getDepartmentId(obj.roleDepartment);
    
    // set up insert statement based on the supplied information
    const sql = `
       INSERT INTO role (title, salary, department_id)
       VALUES (?,?,?)
    `;
-   const params = [obj.roleName, obj.roleSalary, department[0].id];
+   const params = [obj.roleName, obj.roleSalary, id];
    const row = await db.query(sql, params);
    console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `${obj.roleName} has been added to the role table.\nChoose View All Roles to see the new role.`);
 }

@@ -6,6 +6,11 @@ const {
       getDepartmentId,
       addDepartment   
 } = require('./departmentHandler');
+const {    getAllRoles,
+   getRoleNames,
+   getRoleIdByName,
+   addRole 
+} = require('./roleHandler');
 
 // function to get all employees
 async function getAllEmployees() {
@@ -66,7 +71,6 @@ async function getAllManagers() {
 
 // GET manager id by name
 async function getManagerIdByName(name) {
-   //console.log(name.manager);
    const sql = `
       SELECT id
       FROM employee
@@ -80,7 +84,6 @@ async function getManagerIdByName(name) {
 
 // GET employee id by name
 async function getEmployeeIdByName(name) {
-   //console.log(name);
    const sql = `
       SELECT id
       FROM employee
@@ -95,7 +98,6 @@ async function getEmployeeIdByName(name) {
 // GET employees by manager_name
 async function getEmployeesByManagerName(name) {
    const id = await getEmployeeIdByName(name);
-   console.log(name);
    const sql = `
       SELECT
          CONCAT(last_name, ', ', first_name) AS employee,
@@ -119,7 +121,7 @@ async function getEmployeesByManagerName(name) {
 
 // GET employees by dept
 async function getEmployeesByDept(name) {
-   const id = await getDepartmentId(name.dept);console.log(id);
+   const id = await getDepartmentId(name.dept);
    const sql = `
       SELECT
          CONCAT(e.last_name, ', ', e.first_name) AS employee,
@@ -144,6 +146,20 @@ async function getEmployeesByDept(name) {
       return;
    }
    console.table(employees);
+}
+
+// ADD a new employee
+async function addEmployee(first_name, last_name, role, manager) {
+   const role_id = await getRoleIdByName(role);
+   const manager_id = await getManagerIdByName(manager);
+   
+   const sql = `
+      INSERT INTO employee (first_name, last_name, role_id, manager_id)
+      VALUES (?,?,?,?)
+   `;
+   const params = [first_name, last_name, role_id, manager_id];
+   const row = await db.query(sql, params);
+   console.log('\x1b[1m\x1b[33m%s\x1b[40m\x1b[0m', `Successfully added ${first_name} ${last_name} as a ${role} working under ${manager.manager}.`);
 }
 
 // UPDATE the employee's title to a new one
@@ -178,6 +194,7 @@ module.exports = {
    getEmployeeIdByName,
    getEmployeesByManagerName,
    getEmployeesByDept,
+   addEmployee,
    updateEmployeeRole,
    updateEmployeeManager
 };

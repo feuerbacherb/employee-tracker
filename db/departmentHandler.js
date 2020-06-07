@@ -47,9 +47,9 @@ async function getDepartmentId(name) {
    `;
    const params = [name];
 
-   const deptId = await db.query(sql, params);
+   const rows = await db.query(sql, params);
    const id = [];
-   for (const row of deptId) {
+   for (const row of rows) {
       id.push(row);
    }
    return id[0].id;

@@ -7,6 +7,7 @@ const {
    getEmployeeIdByName,
    getEmployeesByManagerName,
    getEmployeesByDept,
+   addEmployee,
    updateEmployeeRole,
    updateEmployeeManager
 } = require('./db/employeeHandler');
@@ -95,6 +96,40 @@ async function promptAddRole() {
    ])
 }
 
+// ADD EMPLOYEE
+async function promptAddEmployee() {
+   const roles = await getRoleNames();
+   const managers = await getAllManagers();
+   return inquirer.prompt([
+      {
+         type: 'input',
+         message: 'Enter the first name of the employee:',
+         name: 'first_name'
+      },
+      {
+         type: 'input',
+         message: 'Enter the last name of the employee:',
+         name: 'last_name'
+      },
+      {
+         type: 'list',
+         message: 'Choose a role for the employee:',
+         name: 'role',
+         choices: [
+            ...roles
+         ]
+      },
+      {
+         type: 'list',
+         message: 'Choose the manager for the employee:',
+         name: 'manager',
+         choices: [
+            ...managers
+         ]
+      }
+   ])
+}
+
 // UPDATE EMPLOYEE
 async function promptUpdateEmployee() {
    const employees = await getEmployeeNames();
@@ -171,7 +206,6 @@ async function init() {
          }
          case 'View Employees By Manager': {
             const manager = await promptViewEmployeesByManager();
-            console.log(manager);
             await getEmployeesByManagerName(manager.manager);
             break;
          }
@@ -194,10 +228,15 @@ async function init() {
             await addRole(newRole);
             break;
          }
+         case 'Add Employee': {
+            const emp = await promptAddEmployee();
+            await addEmployee(emp.first_name, emp.last_name, emp.role, emp);
+            break;
+         }
          case 'Update Employee Role': {
-            const empName = await promptUpdateEmployee();//console.log(empName.emp);
+            const empName = await promptUpdateEmployee();
             const empId = await getEmployeeIdByName(empName.emp);
-            const newRole = await promptGetNewRole(); console.log(newRole);
+            const newRole = await promptGetNewRole();
             const newRoleId = await getRoleIdByName(newRole.role);
             await updateEmployeeRole(empName.emp, empId, newRole.role, newRoleId);
             break;
